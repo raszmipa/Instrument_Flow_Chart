@@ -1,0 +1,436 @@
+package com.sample.rules
+
+import com.sample.Answer
+import com.sample.Question
+import com.sample.InstrumentCandidate
+ 
+rule "Ask about age"
+when
+    not( Answer( questionId == "What's your age?" ) )
+    not( Question( questionId == "What's your age?" ) )
+then
+    insert( new Question("What's your age?", new String[] { "0-5", "6-12", "13+" }) );
+end
+
+rule "Ask about time and money"
+when
+	Answer( questionId == "What's your age?", value == "13+" )
+	not( Answer( questionId == "Do you have a lot of time and money?" ) )
+	not( Question( questionId == "Do you have a lot of time and money?" ) )
+then
+	insert( new Question("Do you have a lot of time and money?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about child prodigy"
+when
+	Answer( questionId == "What's your age?", value == "0-5" )
+	not( Answer( questionId == "Are you a child prodigy?" ) )
+	not( Question( questionId == "Are you a child prodigy?" ) )
+then
+	insert( new Question("Are you a child prodigy?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended violin"
+when
+	Answer( questionId == "Are you a child prodigy?", value == "yes")
+then
+	insert( new InstrumentCandidate("Violin") );
+end
+
+rule "Ask about practice 0-5"
+when
+    Answer( questionId == "What's your age?", value == "0-5" )
+    Answer( questionId == "Are you a child prodigy?", value == "no" )
+    not( Answer( questionId == "Are you prepared to practise a lot?" ) )
+    not( Question( questionId == "Are you prepared to practise a lot?" ) )
+then
+    insert( new Question("Are you prepared to practise a lot?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about practise 6-12"
+when
+    Answer( questionId == "What's your age?", value == "6-12" )
+    not( Answer( questionId == "Are you prepared to practise a lot?" ) )
+    not( Question( questionId == "Are you prepared to practise a lot?" ) )
+then
+    insert( new Question("Are you prepared to practise a lot?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended piano1"
+when
+	Answer( questionId == "Are you prepared to practise a lot?", value == "yes")
+then
+	insert( new InstrumentCandidate("Piano") );
+end
+
+rule "Ask about family"
+when
+    Answer( questionId == "Are you prepared to practise a lot?", value == "no")
+	not( Answer( questionId == "Want to drive your family mad?" ) )
+	not( Question( questionId == "Want to drive your family mad?" ) )
+then
+	insert( new Question("Want to drive your family mad?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended recorder"
+when
+	Answer( questionId == "Want to drive your family mad?", value == "yes" )
+then
+	insert( new InstrumentCandidate("Recorder") );
+end
+
+rule "Recommended harp"
+when
+	Answer( questionId == "Do you have a lot of time and money?", value == "yes")
+then
+	insert( new InstrumentCandidate("Harp") );
+end
+
+rule "Ask about musical ability"
+when
+	Answer( questionId == "What's your age?", value == "13+" )
+	Answer( questionId == "Do you have a lot of time and money?", value == "no" )
+	not( Answer(questionId == "Do you have some musical ability?" ) )
+	not( Question( questionId == "Do you have some musical ability?" ) )
+then
+	insert( new Question("Do you have some musical ability?", new String[] { "yes", "some", "no" }) );
+end
+
+rule "Recommended comb and tissue paper"
+when
+	Answer( questionId == "Do you have some musical ability?", value == "no" )
+then
+	insert( new InstrumentCandidate("Comb and tissue paper") );
+end
+
+rule "Ask about composer"
+when
+	Answer(questionId == "Do you have some musical ability?", value == "some")
+	not (Answer( questionId == "Fancy yourself as a composer?"))
+	not( Question( questionId == "Fancy yourself as a composer?" ) )
+then
+	insert( new Question("Fancy yourself as a composer?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about lip"
+when
+	Answer(questionId == "Do you have some musical ability?", value == "yes")
+	not (Answer( questionId == "Do you have the nerves and upper lip of steel?"))
+	not( Question( questionId == "Do you have the nerves and upper lip of steel?" ) )
+then
+	insert( new Question("Do you have the nerves and upper lip of steel?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended piano2"
+when
+	Answer( questionId == "Do you have the nerves and upper lip of steel?", value == "no" )
+then
+	insert( new InstrumentCandidate("Piano") );
+end
+
+rule "Recommended french horn"
+when
+	Answer( questionId == "Do you have the nerves and upper lip of steel?", value == "yes" )
+then
+	insert( new InstrumentCandidate("French horn") );
+end
+
+rule "Ask about attention"
+when
+	Answer( questionId == "Fancy yourself as a composer?", value == "no" )
+	not (Answer( questionId == "Want to be the centre of attention?"))
+	not( Question( questionId == "Want to be the centre of attention?" ) )
+then
+	insert( new Question("Want to be the centre of attention?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about Mozart/Mccartney"
+when
+	Answer( questionId == "Fancy yourself as a composer?", value == "yes" )
+	not (Answer( questionId == "More of a Mozart of McCartney?"))
+	not( Question( questionId == "More of a Mozart of McCartney?" ) )
+then
+	insert( new Question("More of a Mozart of McCartney?", new String[] { "mozart", "mccartney" }) );
+end
+
+rule "Recommended piano3"
+when
+	Answer( questionId == "More of a Mozart of McCartney?", value == "mozart" )
+then
+	insert( new InstrumentCandidate("Piano") );
+end
+
+rule "Recommended acoustic guitar1"
+when
+	Answer( questionId == "More of a Mozart of McCartney?", value == "mccartney" )
+then
+	insert( new InstrumentCandidate("Acoustic guitar") );
+end
+
+rule "Recommended piano4"
+when
+	Answer( questionId == "Want to be the centre of attention?", value == "yes" )
+then
+	insert ( new InstrumentCandidate("Piano"));
+end
+
+rule "Ask about house (Children path)"
+when
+    Answer( questionId == "Want to drive your family mad?", value == "no" )
+	not( Answer( questionId == "Do you have a big house?" ))
+	not( Question( questionId == "Do you have a big house?" ) )
+then
+	insert( new Question("Do you have a big house?", new String[] { "church", "big", "small" }) );
+end
+
+rule "Ask about house"
+when
+	Answer( questionId == "Want to be the centre of attention?", value == "no" )
+	not( Answer( questionId == "Do you have a big house?" ))
+	not( Question( questionId == "Do you have a big house?" ) )
+then
+	insert( new Question("Do you have a big house?", new String[] { "church", "big", "small" }) );
+end
+
+rule "Recommended organs"
+when
+	Answer( questionId == "Do you have a big house?", value == "church")
+then
+	insert ( new InstrumentCandidate("Organs"));
+end
+
+rule "Ask about neighbours"
+when
+	Answer( questionId == "Do you have a big house?", value == "small" )
+	not( Answer( questionId == "Do you hate your neighbours?" ))
+	not( Question( questionId == "Do you hate your neighbours?" ) )
+then
+	insert( new Question("Do you hate your neighbours?", new String[] { "hate them", "they're nice" }) );
+end
+
+rule "Ask about folk music"
+when
+	Answer( questionId == "Do you hate your neighbours?", value == "they're nice" )
+	not( Answer( questionId == "Do you like folk music?" ))
+	not( Question( questionId == "Do you like folk music?" ) )
+then
+	insert( new Question("Do you like folk music?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended acoustic guitar2"
+when
+	Answer( questionId == "Do you like folk music?", value == "yes")
+then
+	insert ( new InstrumentCandidate("Acoustic guitar"));
+end
+
+rule "Recommended digital piano"
+when
+	Answer( questionId == "Do you like folk music?", value == "no")
+then
+	insert ( new InstrumentCandidate("Digital piano"));
+end
+
+rule "Ask about rhythm"
+when
+	Answer( questionId == "Do you hate your neighbours?", value == "hate them" )
+	not( Answer( questionId == "Do you have a good sense of rhythm?" ))
+	not( Question( questionId == "Do you have a good sense of rhythm?" ) )
+then
+	insert( new Question("Do you have a good sense of rhythm?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended percussion"
+when
+	Answer( questionId == "Do you have a good sense of rhythm?", value == "yes")
+then
+	insert ( new InstrumentCandidate("Percussion"));
+end
+
+rule "Recommended trombone"
+when
+	Answer( questionId == "Do you have a good sense of rhythm?", value == "no")
+then
+	insert ( new InstrumentCandidate("Trombone"));
+end
+
+rule "Ask about orchestra"
+when
+	Answer( questionId == "Do you have a big house?", value == "big" )
+	not( Answer( questionId == "orchestra" ))
+	not( Question( questionId == "orchestra" ) )
+then
+	insert( new Question("orchestra", new String[] { "yes", "no", "baroque" }) );
+end
+
+rule "Ask about sit or stand"
+when
+	Answer( questionId == "orchestra", value == "baroque" )
+	not( Answer( questionId == "Wish to sit or stand?" ))
+	not( Question( questionId == "Wish to sit or stand?" ) )
+then
+	insert( new Question("Wish to sit or stand?", new String[] { "sit", "stand" }) );
+end
+
+rule "Recommended lute"
+when
+	Answer( questionId == "Wish to sit or stand?", value == "sit")
+then
+	insert ( new InstrumentCandidate("Lute"));
+end
+
+rule "Recommended harpsichord"
+when
+	Answer( questionId == "Wish to sit or stand?", value == "stand")
+then
+	insert ( new InstrumentCandidate("Harpsichord"));
+end
+
+rule "Recommended piano5"
+when
+	Answer( questionId == "orchestra", value == "no" )
+then
+	insert ( new InstrumentCandidate("Piano"));
+end
+
+rule "Ask about weights"
+when
+	Answer( questionId == "orchestra", value == "yes" )
+	not( Answer( questionId == "Do you enjoy lifting weights?"))
+	not( Question( questionId == "Do you enjoy lifting weights?" ) )
+then
+	insert( new Question("Do you enjoy lifting weights?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about jazz"
+when
+	Answer( questionId == "Do you enjoy lifting weights?", value == "yes")
+	not( Answer( questionId == "Do you like jazz?"))
+	not( Question( questionId == "Do you like jazz?" ) )
+then
+	insert( new Question("Do you like jazz?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended tuba"
+when
+	Answer( questionId == "Do you like jazz?", value == "no")
+then
+	insert ( new InstrumentCandidate("Tuba"));
+end
+
+rule "Recommended double bass"
+when
+	Answer( questionId == "Do you like jazz?", value == "yes")
+then
+	insert ( new InstrumentCandidate("Double bass"));
+end
+
+rule "Ask about spit"
+when
+	Answer( questionId == "Do you enjoy lifting weights?", value == "no")
+	not( Answer( questionId == "Any avertion to spit or condensation?"))
+	not( Question( questionId == "Any avertion to spit or condensation?" ) )
+then
+	insert( new Question("Any avertion to spit or condensation?", new String[] { "yes", "no" }) );
+end
+
+rule "Ask about jokes"
+when
+	Answer( questionId == "Any avertion to spit or condensation?", value == "yes")
+	not( Answer( questionId == "Mind being the butt of people's jokes?"))
+	not( Question( questionId == "Mind being the butt of people's jokes?" ) )
+then
+	insert( new Question("Mind being the butt of people's jokes?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended cello"
+when
+	Answer( questionId == "Mind being the butt of people's jokes?", value == "no")
+then
+	insert ( new InstrumentCandidate("Cello"));
+end
+
+rule "Recommended viola"
+when
+	Answer( questionId == "Mind being the butt of people's jokes?", value == "yes")
+then
+	insert ( new InstrumentCandidate("Viola"));
+end
+
+rule "Ask about challenge"
+when
+	Answer( questionId == "Any avertion to spit or condensation?", value == "no")
+	not( Answer( questionId == "Want a challenge"))
+	not( Question( questionId == "Want a challenge" ) )
+then
+	insert( new Question("Want a challenge", new String[] { "life's too short", "i like a challenge", "a real challenge" }) );
+end
+
+rule "Ask about reeds"
+when
+	Answer( questionId == "Want a challenge", value == "life's too short")
+	not( Answer( questionId == "Mind fiddling about with reeds?"))
+	not( Question( questionId == "Mind fiddling about with reeds?" ) )
+then
+	insert( new Question("Mind fiddling about with reeds?", new String[] { "hassle", "frustrating" }) );
+end
+
+rule "Ask about loud or elegant"
+when
+	Answer( questionId == "Mind fiddling about with reeds?", value == "hassle")
+	not( Answer( questionId == "Loud or elegant?"))
+	not( Question( questionId == "Loud or elegant?" ) )
+then
+	insert( new Question("Loud or elegant?", new String[] { "loud", "elegant" }) );
+end
+
+rule "Recommended trumpet"
+when
+	Answer( questionId == "Loud or elegant?", value == "loud")
+then
+	insert ( new InstrumentCandidate("Trumpet"));
+end
+
+rule "Recommended flute"
+when
+	Answer( questionId == "Loud or elegant?", value == "elegant")
+then
+	insert ( new InstrumentCandidate("Flute"));
+end
+
+rule "Ask about 80s cover band"
+when
+	Answer( questionId == "Mind fiddling about with reeds?", value == "frustrating")
+	not( Answer( questionId == "Do you want to moonlight in an 80s cover band?"))
+	not( Question( questionId == "Do you want to moonlight in an 80s cover band?" ) )
+then
+	insert( new Question("Do you want to moonlight in an 80s cover band?", new String[] { "yes", "no" }) );
+end
+
+rule "Recommended saxophone"
+when
+	Answer( questionId == "Do you want to moonlight in an 80s cover band?", value == "yes")
+then
+	insert ( new InstrumentCandidate("Saxophone"));
+end
+
+rule "Recommended clarinet"
+when
+	Answer( questionId == "Do you want to moonlight in an 80s cover band?", value == "no")
+then
+	insert ( new InstrumentCandidate("Clarinet"));
+end
+
+rule "Recommended bassoon"
+when
+	Answer( questionId == "Want a challenge", value == "i like a challenge")
+then
+	insert ( new InstrumentCandidate("Bassoon"));
+end
+
+rule "Recommended oboe"
+when
+	Answer( questionId == "Want a challenge", value == "a real challenge")
+then
+	insert ( new InstrumentCandidate("Oboe"));
+end
